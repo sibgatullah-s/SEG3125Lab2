@@ -81,7 +81,6 @@ var products = [
 // prices should be included in this list, as well as a sort based on price
 
 function restrictListProducts(prods, restriction, orgRestriction) {
-	console.log("restrictions", orgRestriction);
 	let product_names = [];
 	for (let i=0; i<prods.length; i+=1) {
 		if ((restriction == "Vegetarian") && (prods[i].vegetarian == true)){
@@ -97,7 +96,6 @@ function restrictListProducts(prods, restriction, orgRestriction) {
 			product_names.push(prods[i].name);
 		}
 	}
-	console.log("size", product_names.length);
 	// remove unorganic items if organic selected
 	// code to filter out non-organic items inspired by https://alligator.io/js/filter-array-method/ and https://stackoverflow.com/questions/13964155/get-javascript-object-from-array-of-objects-by-value-of-property
 	if (orgRestriction == "Organic") {
