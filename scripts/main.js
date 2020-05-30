@@ -3,8 +3,8 @@
 // It is adapted from https://www.w3schools.com/howto/howto_js_tabs.asp
 
 function openInfo(evt, tabName) {
-
 	// Get all elements with class="tabcontent" and hide them
+	console.log("tabname", tabName);
 	tabcontent = document.getElementsByClassName("tabcontent");
 	for (i = 0; i < tabcontent.length; i++) {
 		tabcontent[i].style.display = "none";
@@ -28,37 +28,57 @@ function openInfo(evt, tabName) {
 // it makes each product name as the label for the checkbos
 
 function populateListProductChoices(slct1, slct2) {
+	console.log("input", slct1, slct2);
     var s1 = document.getElementById(slct1);
-    var s2 = document.getElementById(slct2);
+	var s2 = document.getElementById(slct2);
+	var s3 = document.getElementById("organicSelect");
+	if (s1.value != "" && s3.value != ""){
 	
-	// s2 represents the <div> in the Products tab, which shows the product list, so we first set it empty
-    s2.innerHTML = "";
-		
-	// obtain a reduced list of products based on restrictions
-    var optionArray = restrictListProducts(products, s1.value);
-
-	// for each item in the array, create a checkbox element, each containing information such as:
-	// <input type="checkbox" name="product" value="Bread">
-	// <label for="Bread">Bread/label><br>
-		
-	for (i = 0; i < optionArray.length; i++) {
+	
+		// s2 represents the <div> in the Products tab, which shows the product list, so we first set it empty
+		s2.innerHTML = "";
 			
-		var productName = optionArray[i];
-		// create the checkbox and add in HTML DOM
-		var checkbox = document.createElement("input");
-		checkbox.type = "checkbox";
-		checkbox.name = "product";
-		checkbox.value = productName;
-		s2.appendChild(checkbox);
-		
-		// create a label for the checkbox, and also add in HTML DOM
-		var label = document.createElement('label')
-		label.htmlFor = productName;
-		label.appendChild(document.createTextNode(productName));
-		s2.appendChild(label);
-		
-		// create a breakline node and add in HTML DOM
-		s2.appendChild(document.createElement("br"));    
+		// obtain a reduced list of products based on restrictions
+		var optionArray = restrictListProducts(products, s1.value, s3.value);
+
+		// for each item in the array, create a checkbox element, each containing information such as:
+		// <input type="checkbox" name="product" value="Bread">
+		// <label for="Bread">Bread/label><br>
+		console.log("optionarray", optionArray);
+		console.log("products", products);
+		// sort array by increasing prices inspired by https://stackoverflow.com/questions/5002848/how-to-define-custom-sort-function-in-javascript
+		optionArray.sort(function(x, y) {
+			if (products.find(elem => elem.name == x).price < products.find(elem => elem.name == y).price) {
+				return -1;
+			}
+			if (products.find(elem => elem.name == x).price > products.find(elem => elem.name == y).price) {
+				return 1;
+			}
+			return 0;
+		});
+		for (i = 0; i < optionArray.length; i++) {
+			// code to find prices for products inspired by https://stackoverflow.com/questions/36419195/get-index-from-a-json-object-with-value/36419269
+			// console.log("findarr", products.findIndex(obj => obj.name == "brocoli"));
+				
+			var productName = optionArray[i];
+			var idx = products.findIndex(obj => obj.name == productName);
+			var price = products[idx].price;
+			// create the checkbox and add in HTML DOM
+			var checkbox = document.createElement("input");
+			checkbox.type = "checkbox";
+			checkbox.name = "product";
+			checkbox.value = productName;
+			s2.appendChild(checkbox);
+			
+			// create a label for the checkbox, and also add in HTML DOM
+			var label = document.createElement('label')
+			label.htmlFor = productName;
+			label.appendChild(document.createTextNode(productName + ": " + price));
+			s2.appendChild(label);
+			
+			// create a breakline node and add in HTML DOM
+			s2.appendChild(document.createElement("br"));    
+		}
 	}
 }
 	
